@@ -9,12 +9,12 @@ canvas.width = 400;
 canvas.height = window.innerHeight * 0.8;
 
 const background = new Image();
-background.src = "images/space.png";
+background.src = "images/space.jpg";
 
 let score = 0; // Initialize score
 
-const playerBulletController = new BulletController(canvas, 10, "red", true);
-const enemyBulletController = new BulletController(canvas, 4, "white", false);
+const playerBulletController = new BulletController(canvas, 10, "black", true);
+const enemyBulletController = new BulletController(canvas, 4, "red", false);
 const enemyController = new EnemyController(
   canvas,
   enemyBulletController,
@@ -46,7 +46,7 @@ function game() {
 }
 
 function displayScore() {
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "black";
   ctx.font = "20px Arial";
   ctx.fillText(`Score: ${score}`, 10, 30); // Display score at the top-left corner
 }
@@ -59,7 +59,7 @@ function displayGameOver() {
     let text = didWin ? "You Win" : "Game Over";
     let textOffset = didWin ? 3.5 : 5;
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "black";
     ctx.font = "40px Arial";
     ctx.fillText(text, canvas.width / textOffset, canvas.height / 2);
 

@@ -44,11 +44,19 @@ export default class EnemyController {
   }
 
   createInitialEnemies() {
-    for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+    const enemyRowsCount = 3; // Number of rows to spawn
+    const rowHeight = 35; // Height of each enemy row
+    const enemyWidth = 50; // Width of each enemy
+
+    for (let rowIndex = 0; rowIndex < enemyRowsCount; rowIndex++) {
       this.enemyRows[rowIndex] = [];
       for (let colIndex = 0; colIndex < 10; colIndex++) {
         this.enemyRows[rowIndex].push(
-          new Enemy(colIndex * 50, rowIndex * 35, 1) // Initial type is 1
+          new Enemy(
+            colIndex * enemyWidth,
+            rowIndex * rowHeight,
+            Math.ceil(Math.random() * 3)
+          )
         );
       }
     }
@@ -61,27 +69,31 @@ export default class EnemyController {
 
       const rowHeight = 35; // Height of each enemy row
       const enemyWidth = 50; // Width of each enemy
-      let newRowY;
+      const numRowsToSpawn = 3; // Number of rows to spawn
 
-      // Check if there are existing rows
-      if (this.enemyRows.length > 0) {
-        // Get the current topmost row's Y position and subtract rowHeight
-        newRowY = this.enemyRows[0][0].y - rowHeight;
-      } else {
-        // If no rows exist, start at Y = 0
-        newRowY = 35;
+      for (let i = 0; i < numRowsToSpawn; i++) {
+        let newRowY;
+
+        // Determine the Y position for the new row
+        if (this.enemyRows.length > 0) {
+          // Get the current topmost row's Y position and subtract rowHeight
+          newRowY = this.enemyRows[0][0].y - rowHeight;
+        } else {
+          // If no rows exist, start at Y = 0
+          newRowY = rowHeight * i; // Position rows incrementally from the top
+        }
+
+        // Create a new row of enemies
+        const newRow = [];
+        for (let colIndex = 0; colIndex < 10; colIndex++) {
+          const enemyType = Math.ceil(Math.random() * 3); // Random enemy type
+          const shiftedX = colIndex * enemyWidth; // Position based on column index
+          newRow.push(new Enemy(shiftedX, newRowY, enemyType));
+        }
+
+        // Add the new row to the beginning of the enemyRows array
+        this.enemyRows.unshift(newRow);
       }
-
-      // Spawn a new row shifted to the right by 1 enemy width
-      const newRow = [];
-      for (let colIndex = 0; colIndex < 10; colIndex++) {
-        const enemyType = Math.ceil(Math.random() * 3); // Random enemy type
-        const shiftedX = colIndex * enemyWidth + enemyWidth; // Shifted by 1 enemy width
-        newRow.push(new Enemy(shiftedX, newRowY, enemyType));
-      }
-
-      // Add the new row to the beginning of the enemyRows array
-      this.enemyRows.unshift(newRow);
     }
   }
 
@@ -137,6 +149,9 @@ export default class EnemyController {
   }
 
   updateVelocityAndDirection() {
+    this.defaultXVelocity = 0.5; // Slow horizontal movement
+    this.defaultYVelocity = 0.5; // Slow downward movement
+
     for (const enemyRow of this.enemyRows) {
       if (this.currentDirection == MovingDirection.right) {
         this.xVelocity = this.defaultXVelocity;
