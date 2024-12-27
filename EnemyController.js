@@ -50,7 +50,7 @@ export default class EnemyController {
 
     for (let rowIndex = 0; rowIndex < enemyRowsCount; rowIndex++) {
       this.enemyRows[rowIndex] = [];
-      for (let colIndex = 0; colIndex < 10; colIndex++) {
+      for (let colIndex = 0; colIndex < 7; colIndex++) {
         this.enemyRows[rowIndex].push(
           new Enemy(
             colIndex * enemyWidth,
@@ -85,7 +85,7 @@ export default class EnemyController {
 
         // Create a new row of enemies
         const newRow = [];
-        for (let colIndex = 0; colIndex < 10; colIndex++) {
+        for (let colIndex = 0; colIndex < 7; colIndex++) {
           const enemyType = Math.ceil(Math.random() * 3); // Random enemy type
           const shiftedX = colIndex * enemyWidth; // Position based on column index
           newRow.push(new Enemy(shiftedX, newRowY, enemyType));
