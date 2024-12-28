@@ -44,7 +44,7 @@ export default class EnemyController {
   }
 
   createInitialEnemies() {
-    const enemyRowsCount = 3; // Number of rows to spawn
+    const enemyRowsCount = 5; // Number of rows to spawn
     const rowHeight = 35; // Height of each enemy row
     const enemyWidth = 50; // Width of each enemy
 
@@ -85,7 +85,7 @@ export default class EnemyController {
 
         // Create a new row of enemies
         const newRow = [];
-        for (let colIndex = 0; colIndex < 7; colIndex++) {
+        for (let colIndex = 0; colIndex < 8; colIndex++) {
           const enemyType = Math.ceil(Math.random() * 3); // Random enemy type
           const shiftedX = colIndex * enemyWidth; // Position based on column index
           newRow.push(new Enemy(shiftedX, newRowY, enemyType));
@@ -120,15 +120,24 @@ export default class EnemyController {
     this.fireBulletTimer--;
     if (this.fireBulletTimer <= 0) {
       this.fireBulletTimer = this.fireBulletTimerDefault;
+
       const allEnemies = this.enemyRows.flat();
       if (allEnemies.length > 0) {
-        const enemyIndex = Math.floor(Math.random() * allEnemies.length);
-        const enemy = allEnemies[enemyIndex];
-        this.enemyBulletController.shoot(
-          enemy.x + enemy.width / 2,
-          enemy.y,
-          -3
-        );
+        // Number of bullets per timer event
+        const bulletsPerEvent = 10;
+
+        for (let i = 0; i < bulletsPerEvent; i++) {
+          // Select a random enemy each time
+          const enemyIndex = Math.floor(Math.random() * allEnemies.length);
+          const enemy = allEnemies[enemyIndex];
+
+          // Fire a bullet from the selected enemy
+          this.enemyBulletController.shoot(
+            enemy.x + enemy.width / 2, // Bullet starts at enemy center
+            enemy.y,
+            -3 // Bullet velocity (negative for upward movement)
+          );
+        }
       }
     }
   }
@@ -149,8 +158,8 @@ export default class EnemyController {
   }
 
   updateVelocityAndDirection() {
-    this.defaultXVelocity = 0.5; // Slow horizontal movement
-    this.defaultYVelocity = 0.5; // Slow downward movement
+    this.defaultXVelocity = 1; // Slow horizontal movement
+    this.defaultYVelocity = 1; // Slow downward movement
 
     for (const enemyRow of this.enemyRows) {
       if (this.currentDirection == MovingDirection.right) {

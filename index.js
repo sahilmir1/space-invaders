@@ -13,7 +13,7 @@ background.src = "images/space.jpg";
 
 let score = 0; // Initialize score
 
-const playerBulletController = new BulletController(canvas, 10, "black", true);
+const playerBulletController = new BulletController(canvas, 100, "black", true);
 const enemyBulletController = new BulletController(canvas, 4, "red", false);
 const enemyController = new EnemyController(
   canvas,
@@ -28,7 +28,7 @@ let didWin = false;
 
 // Function to increment the score
 function incrementScore() {
-  score += 100; // Increase score by 100 for each enemy
+  score += 0.1; // Increase score by 100 for each enemy
 }
 
 function game() {
@@ -48,7 +48,7 @@ function game() {
 function displayScore() {
   ctx.fillStyle = "black";
   ctx.font = "20px Arial";
-  ctx.fillText(`Score: ${score}`, 10, 30); // Display score at the top-left corner
+  ctx.fillText(`Score: ${score.toFixed(1)}`, 10, 30); // Display score at the top-left corner
 }
 
 let formDisplayed = false; // Add a flag to track if the form has been displayed
@@ -66,7 +66,7 @@ function displayGameOver() {
     // Render the score on the canvas
     ctx.font = "30px Arial";
     ctx.fillText(
-      `Score: ${score}`,
+      `Score: ${score.toFixed(1)}`,
       canvas.width / 2 - 50,
       canvas.height / 2 + 50
     );
@@ -146,6 +146,16 @@ function checkGameOver() {
 
   if (enemyController.collideWith(player)) {
     isGameOver = true;
+  }
+
+  // Check if any enemy reaches the bottom of the canvas
+  for (let row of enemyController.enemyRows) {
+    for (let enemy of row) {
+      if (enemy.y + enemy.height >= canvas.height) {
+        isGameOver = true;
+        return;
+      }
+    }
   }
 
   if (enemyController.enemyRows.length === 0) {
